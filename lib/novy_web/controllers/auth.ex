@@ -8,8 +8,17 @@ defmodule NovyWeb.Auth do
 
   def call(conn, _opts) do
     user_id = get_session(conn, :user_id)
-    user = user_id && Novy.Accounts.get_user(user_id)
-    assign(conn, :current_user, user)
+
+    cond do
+      user = conn.assigns[:current_user] ->
+        put_current_user(conn, user)
+
+      user = user_id && Novy.Accounts.get_user(user_id) ->
+        put_current_user(conn, user)
+
+      true ->
+        assign(conn, :current_user, nil)
+    end
   end
 
   def login(conn, user) do
@@ -32,5 +41,13 @@ defmodule NovyWeb.Auth do
       |> redirect(to: Routes.page_path(conn, :index))
       |> halt()
     end
+  end
+
+  defp put_current_user(conn, user) do
+    token = Phoenix.Token.sign(conn, "user socket", user.id)
+
+    conn
+    |> assign(:current_user, user)
+    |> assign(:user_token, token)
   end
 end

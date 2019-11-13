@@ -3,6 +3,8 @@ defmodule Novy.Accounts do
   The Accounts context.
   """
 
+  import Ecto.Query
+
   alias Novy.Repo
   alias Novy.Accounts.User
 
@@ -56,5 +58,9 @@ defmodule Novy.Accounts do
         Pbkdf2.no_user_verify()
         {:error, :not_found}
     end
+  end
+
+  def list_user_with_ids(ids) do
+    Repo.all(from(u in User, where: u.id in ^ids))
   end
 end

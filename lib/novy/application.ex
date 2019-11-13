@@ -11,9 +11,10 @@ defmodule Novy.Application do
       # Start the Ecto repository
       Novy.Repo,
       # Start the endpoint when the application starts
-      NovyWeb.Endpoint
+      NovyWeb.Endpoint,
       # Starts a worker by calling: Novy.Worker.start_link(arg)
       # {Novy.Worker, arg},
+      NovyWeb.Presence
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
